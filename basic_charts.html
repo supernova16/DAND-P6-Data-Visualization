@@ -3,11 +3,33 @@
 <head>
   <meta charset="utf-8">
   <script src="https://d3js.org/d3.v4.min.js"></script>
-  <script src="http://dimplejs.org/dist/dimple.v2.3.0.min.js"></script>
 
   <style>
-  circle.dimple-series-1 {
-    fill: red !important;
+  .axis {
+    font-family: arial;
+    font-size: 0.6em;
+  }
+
+  path {
+    fill: none;
+    stroke: black;
+    stroke-width: 2px;
+  }
+
+  .tick {
+    fill: none;
+    stroke: black;
+  }
+
+  circle {
+    opacity: 0.4;
+    stroke: none;
+  }
+
+  .line_plot {
+    fill: none;
+    stroke: #4eb0bb;
+    stroke-width: 1px;
   }
 
   h2{
@@ -20,46 +42,159 @@
 
     //'use strict';
 
-    var margin = 0,
-    width = 1400 - margin,
-    height = 600 - margin;
+    var margin = 75,
+    width = 1100 - margin,
+    height = 500 - margin;
 
     var title = d3.select('body')
       .append('h2')
       .text('Word Cup Attendance'); //添加标题
 
-    var svg = dimple.newSvg("body")
-      .attr("width", width + margin)
-      .attr("height", height + margin);
+    var svg = d3.select("body")
+      .append("svg")
+        .attr("width", width + margin)
+        .attr("height", height + margin)
+      .append('g')
+          .attr('class','chart');
 
     //var myChart = new dimple.chart(svg, data);
     //替换为相对应的 D3 代码
 
-    debugger;
-
-    D3.select('svg')
+    //debugger; //在此处进行 debugger 能在 console 访问 data 数组
+    d3.select('svg')
       .selectAll('circle')
       .data(data)
       .enter()
-      .append('circle')
-
-    debugger;
+      .append('circle');
 
 
-    var x = myChart.addTimeAxis("x", "year");
-    myChart.addMeasureAxis("y", "attendance");
-    myChart.addSeries(null, dimple.plot.line);
-    myChart.addSeries(null, dimple.plot.scatter);
-    x.tickFormat = '%Y'; // 只保留年份
-    x.timeInterval = 2; //x 轴上标尺显示时间间隔为 2（年）
-    myChart.draw();
+    //var x = myChart.addTimeAxis("x", "year");
+    //myChart.addMeasureAxis("y", "attendance");
+    //x.tickFormat = '%Y'; // 只保留年份
+    //x.timeInterval = 2; //x 轴上标尺显示时间间隔为 2（年）
+    //替换轴构建代码
+
+    var time_extent = d3.extent(data, function(d) {
+        return d['date'];
+    }); // x 轴代表日期列，找到日期的范围
+
+    var count_extent = d3.extent(data, function(d) {
+        return d['attendance'];
+    }); // y 轴代表观赛人数列，找到观赛人数的范围
+
+    var time_scale = d3.scaleTime()// 刻度值域和定义域
+      .range([margin, width])// 占地范围
+      .domain(time_extent); //值域
+
+    var count_scale = d3.scaleLinear()
+      .range([height, margin])
+      .domain(count_extent);
+
+    var time_axis = d3.axisBottom() //绘制 x 轴
+      .scale(time_scale)// x 轴值域
+      .tickArguments([d3.timeYear.every(2)]); //刻度线
+
+    var count_axis = d3.axisLeft()
+      .scale(count_scale)
+
+    //添加轴到 svg 中
+
+    d3.select('svg')
+      .append('g')
+      .attr('class', 'x axis')
+      .attr('transform', 'translate(0, '+ height +')')
+      .call(time_axis);//调用 轴 函数
+
+    d3.select('svg')
+      .append('g')
+      .attr('class', 'y axis')
+      .attr('transform', 'translate('+ margin +', 0)')
+      .call(count_axis);
+
+    //debugger;
+
+    //myChart.addSeries(null, dimple.plot.line);
+    //myChart.addSeries(null, dimple.plot.scatter);
+    //myChart.draw();
+    //替换画圆点代码
+    var radius = 3;
+    var color = "blue";
+
+    d3.selectAll("circle")
+      .attr("cx", function(d) {
+          return time_scale(d["date"]);//根据日期，修改 x 轴位置
+      })
+      .attr("cy", function(d) {
+          return count_scale(d["attendance"]);//根据参数人数，修改 y 轴位置
+      })
+      .attr("r", function(d) {
+          if (d['home'] == d['team1'] || d['home'] == d['team2']) {
+            return radius * 1.5;
+          } else {
+            return radius;
+          }
+      })
+      .attr("fill", function(d) {
+          if (d['home'] == d['team1'] || d['home'] == d['team2']) {
+            return 'red';
+          } else {
+            return 'blue';
+          }
+      });
+
+    //添加图例
+    var legend = svg.append('g')
+      .attr('class', 'legend')
+      .attr('transform', 'translate('+ (width - 100) +', '+ 20 +')')//x：比 width 小100，y：20 的位置
+      .selectAll('g')
+      .data(['Home Team 主场队', 'Others 其他队'])
+      .enter().append('g');
+
+    legend.append('circle')//添加圆点
+      .attr('cy', function(d, i) { //i 是数据点下标
+        return i * 30; //两个图例 在 y 轴上间隔 30
+      })
+      .attr("r", function(d) {
+          if (d == 'Home Team 主场队') {
+            return radius * 1.5;
+          } else {
+            return radius;
+          }
+      })
+      .attr("fill", function(d) {
+          if (d == 'Home Team 主场队') {
+            return 'red';
+          } else {
+            return 'blue';
+          }
+      });
+
+    legend.append('text')// 添加文本
+      .attr('y', function(d, i) { //文本左下角距离圆点的相对位置
+        return i * 30 + 5;
+      })
+      .attr('x', radius * 5)
+      .text(function(d) {
+        return d;
+      });
+
   };
+
   </script>
 </head>
 
 <body>
   <script type="text/javascript">
-  d3.tsv("world_cup_geo.tsv", draw);
+  //d3.tsv("world_cup_geo.tsv", draw);
+
+  //example date：27－05-1934 (16：00 h)
+  var parseTime = d3.timeParse('%d-%m-%Y (%H:%M h)');
+
+  d3.tsv('world_cup_geo.tsv', function(d) {
+      d['date'] = parseTime(d['date']);//字符串改为时间格式
+      d['attendance'] = +d['attendance']; //字符串改为整数
+      return d;
+  }, draw);
   </script>
 </body>
 </html>
