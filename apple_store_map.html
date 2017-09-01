@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src = 'https://d3js.org/d3.v4.min.js'></script>
+  <style>
+
+  h1, h2, h3, p {
+
+          position: absolute;
+          left: 30px;
+          font-size: 1.3em;
+          font-weight: 100;
+          color: white;
+      }
+      h1{
+        font-weight: 300;
+
+        top: 8px;
+        left: 60px;
+
+      }
+      h2 {
+          top: 400px;
+          font-size: 2em;
+      }
+      h3 {
+        top: 480px;
+        font-size: 1em;
+      }
+      p{
+        bottom:5px;
+        font-size: 0.7em;
+      }
+      img{
+        position: absolute;
+        top: 5px;
+        left: 20px;
+        width: 30px;
+      }
+
+  html{
+
+    //font-family: Myriad Set Pro,Helvetica Neue,Helvetica, Arial, sans-serif;
+    position: relative;
+
+    height: 700px;
+    width:100%;
+
+    background:url('applestore_hk_ifc_large_2x.jpg') no-repeat;
+    -webkit-background-size: 100%;
+    background-size: 100%;
+
+  }
+
+
+  svg {
+    position: relative;
+    top: 70px;
+    width: auto;
+    height: 500px;
+
+
+
+    background-color: rgba(52, 55, 83, 0.52);
+
+
+
+  }
+
+  path {
+    fill: #ffffff;
+    stroke: rgba(177, 178, 181, 0.31);
+    stroke-width: 0.5;
+
+  }
+
+  circle {
+    fill: rgb(79, 104, 179);
+    stroke: rgb(235, 240, 246);
+    stroke-width: 1;
+    opacity: 0.6;
+    r: 5;
+  }
+  circle:hover {
+    fill:rgb(236, 77, 18);
+    opacity: 0.8;
+    r: 7;
+
+
+  }
+
+
+
+  </style>
+
+  <script >
+    function draw(geo_data) {
+      //draw map
+      "use strict";
+
+      var margin = 30,
+          width = 1470,
+          height =580 - margin;
+
+      var svg = d3.select('.svg-container')
+          .append('svg')
+          .attr('width', width )
+          .attr('height', height + margin)
+          .append('g')
+          .attr('class','map');
+
+      var projection = d3.geoMercator()
+          .scale(190)
+          .translate([width/2, height/2])
+
+      var path = d3.geoPath().projection(projection)
+
+      var map = svg.selectAll('path')
+          .data(geo_data.features)
+          .enter()
+          .append('path')
+          .attr('d', path);
+
+      function draw_point(data) {
+        //draw circles
+        svg.append('g')
+            .attr('class','bubble')
+            .selectAll('circle')
+            .data(data.sort())
+            .enter()
+            .append('circle')
+            .attr('cx', function(d) {
+              return projection([ +d['Long'], +d['Lat'] ])[0];
+            })
+            .attr('cy', function(d) {
+              return projection([ +d['Long'], +d['Lat'] ])[1];
+            })
+            .on("mouseover", function(d){
+                  d3.select("h2")
+                    .text(d["NameFull"]);
+                  d3.select("h3").text(d["Address"]);
+                  d3.select(this).attr("class","incident hover");
+              })
+            .on("mouseout", function(d){
+              d3.select("h2").text("View the store name and address");
+              d3.select("h3").text("Move the mouse over points");
+              d3.select(this).attr("class","incident");
+            });
+
+      }
+
+      //load store data
+
+      //var parseTime = d3.timeParse('%d/%m/20%Y');
+
+      d3.csv('apple_store_list_2.0.csv',draw_point);
+
+
+    };
+
+
+  </script>
+</head>
+
+<body>
+
+<div class = 'svg-container'>
+  <script >
+  d3.json("world_countries.json", draw);
+  </script>
+</div>
+
+
+<div class='navbar'>
+  <img class="logo" src="apple_logo_large.svg">
+</div>
+<div class='store_info'>
+
+  <h1>Apple Stores Worldwide (2001-2017)</h1>
+  <h2>Store Name</h2>
+  <h3>Store Adress</h3>
+
+
+</div>
+
+
+
+
+</body>
+</html>
