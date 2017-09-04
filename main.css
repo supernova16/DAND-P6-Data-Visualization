@@ -1,0 +1,125 @@
+html{
+  position: relative;
+  height: 100%;
+  width:100%;
+  background:url('applestore_hk_ifc_large_2x.jpg') no-repeat;
+  -webkit-background-size: 100%;
+  background-size: 100%;
+}
+
+/* layout */
+
+.header{
+  height: 70px;
+  width: 100%;
+}
+
+.svg-container {
+  width: 100%;
+  height:500px;
+  background-color: rgba(52, 55, 83, 0.52);
+}
+
+.store_info {
+  position: absolute;
+  top: 270px;
+  background-color: rgba(32, 32, 32, 0.3);
+  width: 250px;
+  margin: 5px;
+
+}
+
+.guide {
+  display: none;
+}
+
+.slider {
+  float: right;
+  margin:5px;
+  padding: 10px;
+  width: 600px;
+  height:30px;
+  border: 1px solid rgb(41, 114, 210);
+  //background-color: rgb(179, 179, 179);
+}
+
+/* element style */
+
+.logo {
+  width: 30px;
+  float: left;
+
+}
+
+h1,h2,h3,p {
+  color: white;
+
+}
+
+h1 {
+  float:left;
+  margin-left: 10px;
+  font-size: 1.4em;
+  font-weight: 105;
+
+}
+
+h2 {
+
+}
+
+h3 {
+  margin-left: 5px;
+  font-size: 1.1em;
+  font-weight: 100;
+}
+
+p {
+  margin-left: 5px;
+  font-size: 0.9em;
+  font-weight: 100;
+}
+
+
+#store_img {
+  position: absolute;
+  top:5px;
+  left: 5px;
+  width:200px;
+  border-radius: 10px;
+}
+
+#store_img_bg {
+
+  margin: 5px;
+  width:200px;
+  height: 133.33px;
+  border-radius: 10px;
+  background-color: rgba(244, 244, 244, 0.18);
+}
+
+
+
+
+
+/* map style */
+
+path {
+  fill: #ffffff;
+  stroke: rgba(177, 178, 181, 0.31);
+  stroke-width: 0.5;
+}
+
+.selected {
+  opacity: 0.96;
+}
+
+circle {
+  fill: rgb(79, 104, 179);
+  stroke: rgb(235, 240, 246);
+  opacity: 0.6;
+}
+circle:hover {
+  fill:rgb(236, 77, 18);
+  opacity: 0.8;
+}
