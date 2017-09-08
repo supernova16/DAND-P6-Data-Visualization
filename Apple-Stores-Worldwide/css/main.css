@@ -2,9 +2,10 @@ html{
   position: relative;
   height: 100%;
   width:100%;
-  background:url('applestore_hk_ifc_large_2x.jpg') no-repeat;
+  background:url('../img/applestore_hk_ifc_large_2x.jpg') no-repeat;
   -webkit-background-size: 100%;
   background-size: 100%;
+  background-color: rgb(71, 78, 254);
 }
 
 /* layout */
