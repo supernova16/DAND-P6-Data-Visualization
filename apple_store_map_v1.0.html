@@ -127,7 +127,7 @@
         svg.append('g')
             .attr('class','bubble')
             .selectAll('circle')
-            .data(data.sort())
+            .data(data)
             .enter()
             .append('circle')
             .attr('cx', function(d) {
