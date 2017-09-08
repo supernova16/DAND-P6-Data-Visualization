@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>apple</title>
+  <link rel="shortcut icon" type="image/ico" href="apple.ico"/>
+  <script src = 'https://d3js.org/d3.v4.min.js'></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/968aa9ac2a.css">
+  <link rel='stylesheet' href='main.css'>
+  <script >
+    function draw(geo_data) {
+      //draw map
+      "use strict";
+      //debugger; //check data
+
+      var width = 1470;
+      var height = 500;
+
+
+      var svg = d3.select('.svg-container')
+          .append('svg')
+          .attr('width', '100%' )
+          .attr('height', '100%')
+          .call(d3.zoom()
+              .scaleExtent([1, 50])
+              .on('zoom', function(){
+                d3.select('.paths').attr('transform',
+                  'translate(' + d3.event.transform.x + ',' + d3.event.transform.y + ') scale(' + d3.event.transform.k + ')');
+                d3.select('.circles').attr('transform',
+                  'translate(' + d3.event.transform.x + ',' + d3.event.transform.y + ') scale(' + d3.event.transform.k + ')');
+                d3.selectAll('circle').attr("r", 6/d3.event.transform.k)
+                  .attr("stroke-width", 1/d3.event.transform.k);
+
+              }))//.on('dblclick.zoom', null)
+          .append('g')
+          .attr('class','map');
+
+
+      var projection = d3.geoMercator()
+          .scale(190)
+          .translate([width/2, height/2])
+
+      var path = d3.geoPath().projection(projection)
+
+      var map = svg.append('g').attr('class', 'paths')
+          .selectAll('path')
+          .data(geo_data.features)
+          .enter().append('path')
+          .attr('d', path)
+          .on('mouseenter', function(){
+            this.classList.add('selected');
+          })
+          .on('mouseleave', function(){
+            this.classList.remove('selected');
+          });
+
+
+
+
+      function draw_point(data) {
+        //draw circles
+
+        //var scale = ;
+        //var translate = [defaultTranslateX, defaultTranslateY];
+
+        svg.append('g')
+            .attr('class','circles')
+            .selectAll('circle')
+            .data(data.sort( function(a, b){return a['Num'] - b['Num'];}))//sort by Num
+            .enter()
+            .append('circle')
+            .on("mouseover", function(d){
+                  d3.select("#store_name").text(d["NameFull"]);
+                  d3.select("#store_addr").text(d["Address"]);
+                  d3.select('#store_date').text('Open : '+ d['Date'].toLocaleDateString());
+                  d3.select('#store_num').text(d['Num']);
+                  d3.select('#store_img').attr('src',d['Photo']);
+                  //d3.select('.store_info').attr('style','display:block');
+                  d3.select(this).attr("class","incident hover");
+                })
+            .on("mouseout", function(d){
+                  d3.select("#store_name").text('移动鼠标到标注点上观察详细信息');
+                  d3.select("#store_addr").text('可用鼠标滚轮和双击缩放地图');
+                  d3.select('#store_date').text('');
+                  d3.select('#store_num').text('');
+                  //d3.select('.store_info').attr('style','display:none');
+                  d3.select('#store_img').attr('src','');
+                  d3.select(this).attr("class","incident");
+
+
+                })
+            .transition()
+                .delay(function(d, i) { return i * 1 })
+                .duration(5)
+                .ease(Math.sqrt)
+                .attr('r', 6)//or 5/zoomIdent
+                .attr('stroke-width', 0.5)
+                .attr('cx', function(d) {
+                  return projection([ +d['Long'], +d['Lat'] ])[0];})
+                .attr('cy', function(d) {
+                  return projection([ +d['Long'], +d['Lat'] ])[1];});
+
+        svg.attr("transform", "translate(" + [0,0] + ") scale(" + 1 + ")");
+
+        // slider
+
+        d3.select('.slider').call(d3.slider());
+
+
+
+
+
+
+
+        // animation
+        //function update(date){
+          //update circles by date
+
+
+
+        //}
+
+      }
+
+
+      //load store data
+
+      var parseTime = d3.timeParse('%B %d, %Y');//format date
+
+      d3.csv('apple_store_list_v2.0.csv', function(d){
+        d['Date'] = parseTime(d['Date']);
+        return d;
+      }, draw_point);
+
+
+    };
+
+
+  </script>
+</head>
+
+<body>
+
+<div class='header'>
+  <img class="logo" src="apple_logo_large.svg">
+  <h1>Apple Stores Worldwide (2001-2017)</h1>
+</div>
+
+<div class = 'svg-container'>
+  <script >
+  d3.json("world_countries.json", draw);
+  </script>
+</div>
+
+<div class ='store_info'>
+  <img id = 'store_img_bg' src="apple_logo_large.svg" />
+  <img id ='store_img' />
+  <h3 id ='store_name'>Store Name</h3>
+  <p id = 'store_addr'>Store Address</p>
+  <p id ='store_date'>Open Date</p>
+  <p id ='store_num'> Num</p>
+
+</div>
+
+<div class = 'guide'>
+  <h3>使用鼠标操作</h3>
+</div>
+
+<div class = 'slider'>
+  <span id = 'range_value'>2011</span>
+  <input id="time_range" type="range" value="1" min = '2011' max = '2017' step = '0.1' ,defaultValue = '2011'>
+  <span id = 'range_value'>2017</span>
+</div>
+
+<button type="button" id= 'btn_play' title = '点击播放或暂停'>
+  <i class="fa fa-play"></i>
+</button>
+
+<p id = 'cur_year'>
+  2011
+</p>
+
+
+
+
+</body>
+</html>
