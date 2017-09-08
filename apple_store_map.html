@@ -5,6 +5,7 @@
   <title>apple</title>
   <link rel="shortcut icon" type="image/ico" href="apple.ico"/>
   <script src = 'https://d3js.org/d3.v4.min.js'></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/968aa9ac2a.css">
   <link rel='stylesheet' href='main.css'>
   <script >
     function draw(geo_data) {
@@ -30,8 +31,7 @@
                 d3.selectAll('circle').attr("r", 6/d3.event.transform.k)
                   .attr("stroke-width", 1/d3.event.transform.k);
 
-              }))
-          .on("wheel", function() { d3.event.preventDefault(); })
+              }))//.on('dblclick.zoom', null)
           .append('g')
           .attr('class','map');
 
@@ -102,6 +102,11 @@
 
         svg.attr("transform", "translate(" + [0,0] + ") scale(" + 1 + ")");
 
+        // slider
+
+        d3.select('.slider').call(d3.slider());
+
+
 
 
 
@@ -161,13 +166,20 @@
   <h3>使用鼠标操作</h3>
 </div>
 
-<div class = slider>
-  <input id="time_range" type="range" value="1" min = '2011' max = '2017' step = '1' >
-
-
+<div class = 'slider'>
+  <span id = 'range_value'>2011</span>
+  <input id="time_range" type="range" value="1" min = '2011' max = '2017' step = '0.1' ,defaultValue = '2011'>
+  <span id = 'range_value'>2017</span>
 </div>
 
-<div class = 'btn_paly'
+<button type="button" id= 'btn_play' title = '点击播放或暂停'>
+  <i class="fa fa-play"></i>
+</button>
+
+<p id = 'cur_year'>
+  2011
+</p>
+
 
 
 

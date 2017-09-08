@@ -36,10 +36,7 @@ html{
 .slider {
   float: right;
   margin:5px;
-  padding: 10px;
-  width: 600px;
-  height:30px;
-  border: 1px solid rgb(41, 114, 210);
+  padding:20px 50px 20px 10px;
   //background-color: rgb(179, 179, 179);
 }
 
@@ -69,15 +66,24 @@ h2 {
 }
 
 h3 {
-  margin-left: 5px;
+  margin: 5px 5px;
   font-size: 1.1em;
   font-weight: 100;
 }
 
 p {
-  margin-left: 5px;
+  margin: 5px 3px;
   font-size: 0.9em;
   font-weight: 100;
+}
+
+#cur_year {
+  position: absolute;
+  top: 440px;
+  right: 50px;
+  font: 500 8em "Helvetica Neue";
+  opacity: 0.8;
+  color: #ddd;
 }
 
 
@@ -97,6 +103,181 @@ p {
   border-radius: 10px;
   background-color: rgba(244, 244, 244, 0.18);
 }
+
+#btn_play {
+    float: right;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 30px;
+    margin: 25px 5px 10px 5px;
+    border-radius: 5px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+    background-color: rgba(179, 179, 179, 0);
+    color: white;
+    border: 0px solid rgb(254, 253, 252);
+}
+#btn_play:hover {
+  background-color: rgba(179, 179, 179, 0);
+  color: rgb(245, 89, 48);
+}
+#btn_play:focus {
+  outline: none;
+}
+
+#range_value {
+  position: relative;
+  top: 5px;
+  color: #ffffff;
+  font-size: 1.3em;
+  padding: 5px;
+}
+input[type=range] {
+  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+  width: 500px;
+  border-radius: 10px;
+}
+
+input[type=range]:focus {
+  outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+}
+
+/* Special styling for WebKit/Blink */
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
+  margin-top: -8px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+  box-shadow: 0px 0px 5px #b8b8b8 ; /* Add cool effects to your sliders! */
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 5px;
+  cursor: pointer;
+  background: #c8c8c8;
+  border-radius: 5px;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #c8c8c8;
+}
+
+input[type=range]:hover::-webkit-slider-thumb {
+  //background: rgba(240, 86, 37, 0.64);
+}
+
+input[type=range]:active::-webkit-slider-thumb {
+  //background: rgba(240, 86, 37, 0.64);
+}
+
+
+
+/* All the same stuff for Firefox */
+input[type=range]::-moz-range-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 1px solid #000000;
+  height: 36px;
+  width: 16px;
+  border-radius: 3px;
+  background: #C68000;
+  cursor: pointer;
+}
+
+input[type=range]::-moz-range-thumb:hover {
+  background: orange;
+}
+
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 8.4px;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: rgb(90,90,90);
+  border-radius: 1.3px;
+  border: 0.2px solid #010101;
+}
+
+/* All the same stuff for IE */
+input[type=range]::-ms-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 1px solid #000000;
+  height: 36px;
+  width: 16px;
+  border-radius: 3px;
+  background: #C68000;
+  cursor: pointer;
+  /*top: -100px; AAAAA*/
+}
+
+input[type=range]::-ms-thumb:hover {
+  background: orange;
+}
+
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 8.4px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  border-width: 16px 0;
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: rgb(90,90,90);
+  border: 0.2px solid #010101;
+  border-radius: 2.6px;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: rgb(90,90,90);
+}
+input[type=range]::-ms-fill-upper {
+  background: rgb(90,90,90);
+  border: 0.2px solid #010101;
+  border-radius: 2.6px;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: rgb(90,90,90);
+}
+
+/*
+#time_range {
+  width: 900px;
+  border-radius: 5px;
+  background: #ccc;
+  outline: none;
+
+  &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #353535;
+      cursor: pointer;
+      -webkit-transition: background .15s ease-in-out;
+      transition: background .15s ease-in-out;
+
+      &:hover {
+        background: #e06161;
+      }
+   }
+
+    &:active::-webkit-slider-thumb {
+      background: #e06161;
+    }
+
+
+}
+*/
+
+
 
 
 
