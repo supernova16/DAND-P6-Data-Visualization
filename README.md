@@ -9,6 +9,6 @@
 ## Apple Stores Worldwide
 
 - Apple stores' locations worldwide
-- The map show the development of Apple Store
+- The map shows the development of Apple Store
 
 
