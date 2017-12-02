@@ -151,7 +151,7 @@
 
 
           //添加动画，表现年份
-          //更新函数－只显示选中的那一年
+          //更新函数－只显示选中的那一年，所有那一年要更新的都放到更新函数里。
           function update(year) {
             //过滤
             var filtered = nested.filter(function(d) {
@@ -159,9 +159,9 @@
             });//筛选给定年份的数据
 
             d3.select('h2')
-              .text('World Cup  ' + year);//动态更新标题
+              .text('World Cup  ' + year);//－－1.更新标题
 
-            var circles = svg.selectAll('circle')
+            var circles = svg.selectAll('circle')//－－2. 更新圆点 circles
               .data(filtered, key_func);// 绑定过滤后的数据
 
             circles.exit().remove();//关联页面上所有的圆圈，把它们移除
@@ -176,9 +176,9 @@
 
             var countries = filtered[0].value.teams; //创建给定年份的参赛国的名单
 
-            function update_countries(d) {
-              if (countries.indexOf(d.properties.name) !== -1){ //检查地图上是否有给定年份名单里的国家
-                return 'rgb(45, 228, 74)';
+            function update_countries(d) {//--3. 更新当年国家
+              if (countries.indexOf(d.properties.name) !== -1){ //检查地图上的国家是否是给定年份名单里的国家
+                return 'rgb(45, 228, 74)';//是给定年份中的国家变成绿色，不是变成白色
               } else { return 'rgb(255, 255, 255)'; }
             }
 
@@ -217,7 +217,7 @@
                   .append('div')//添加子元素
                   .text(function(d) { return d; });
 
-                //向按钮添加事件 JQuery
+                //向按钮添加事件 
                 buttons.on('click', function(d) {
 
                   d3.select('.years_buttons')
