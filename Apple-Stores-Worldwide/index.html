@@ -5,6 +5,7 @@
   <title>apple</title>
   <link rel="shortcut icon" type="image/ico" href="img/apple.ico"/>
   <script src = 'js/d3.js'></script><!--network connect slowly, replace https://d3js.org/d3.v4.js with local file -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/968aa9ac2a.css">
   <link rel='stylesheet' href='css/main.css'>
   <script >
     function draw(geo_data) {
@@ -56,19 +57,19 @@
 
 
 
-      function draw_point(data) {
+      function draw_point(point_data) {
         //draw circles
 
         svg.append('g')
             .attr('class','circles')
             .selectAll('circle')
-            .data(data.sort( function(a, b){return a['Num'] - b['Num'];}))//sort by Num
+            .data(point_data.sort( function(a, b){return a['Num'] - b['Num'];}))//sort by Num
             .enter()
             .append('circle')
             .on("mouseover", function(d){
                   d3.select("#store_name").text(d["NameFull"]);
                   d3.select("#store_addr").text(d["Address"]);
-                  d3.select('#store_date').text('Open: '+ d['Date'].toLocaleDateString());
+                  d3.select('#store_date').text('Open: '+ d['Date']);
                   d3.select('#store_num').text('ID: '+ d['Num']);
                   d3.select('#store_img').attr('src',d['Photo']);
                   //d3.select('.store_info').attr('style','display:block');
@@ -84,8 +85,8 @@
                   d3.select(this).attr("class","incident");
                 })
             .transition()
-                .delay(function(d, i) { return i * 40 })
-                .duration(5)
+                .delay(function(d, i) { return i * 50 })
+                .duration(10)
                 .ease(Math.sqrt)
                 .attr('r', 6)//zoomIdent
                 .attr('stroke-width', 0.5)
@@ -100,14 +101,23 @@
       }
 
 
-      //load store data
+      //click first_play button and then load store data
+
+      var applestore_data = [];
 
       var parseTime = d3.timeParse('%B %d, %Y');//format date
 
       d3.csv('data/apple_store_list_v2.0.csv', function(d){
         d['Date'] = parseTime(d['Date']);
-        return d;
-      }, draw_point);
+        applestore_data = d;
+      });
+
+      function hide_start_screen(){
+        document.getElementById('screen').style.display="none";
+        draw_point(applestore_data);
+      }
+
+      d3.select('#first_play').on('click',hide_start_screen);
 
     };
 
@@ -137,6 +147,14 @@
   <p id ='store_num'></p>
 </div>
 
+<div class = 'start_screen' id = 'screen'>
+  <button type ='button' id = 'first_play' title ='点击开始播放' >
+    <i class="fa fa-play"></i>
+  </button>
+  <p id = 'start_title'>
+    全球 Apple Store 可视化<br />2011-2017
+  </p>
+</div>
 
 
 </body>
